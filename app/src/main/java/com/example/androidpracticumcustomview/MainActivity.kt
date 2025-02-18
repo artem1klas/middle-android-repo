@@ -26,37 +26,31 @@ class MainActivity : ComponentActivity() {
         setContent { // Jetpack Compose
             MainScreen()
         }
+    }
 
-//        private fun startXmlPracticum() {
-//            val customContainer = CustomContainer(this)
-//
-//
-//            val firstView = TextView(this).apply {
-//                text = "UP"
-//                textSize = 24f
-//                layoutParams = ViewGroup.LayoutParams(
-//                    ViewGroup.LayoutParams.WRAP_CONTENT,
-//                    ViewGroup.LayoutParams.WRAP_CONTENT
-//                )
-//
-//            }
-//
-//            val secondView = TextView(this).apply {
-//                text = "DOWN"
-//                textSize = 24f
-//                layoutParams = ViewGroup.LayoutParams(
-//                    ViewGroup.LayoutParams.WRAP_CONTENT,
-//                    ViewGroup.LayoutParams.WRAP_CONTENT
-//                )
-//            }
-//            customContainer.addView(firstView)
-//            customContainer.addView(secondView)
-//            setContentView(customContainer)
-//
-//            // Добавление второго элемента через некоторое время
-////        Handler(Looper.getMainLooper()).postDelayed({
-////            customContainer.addView(secondView)
-////        }, 2000)
-//        }
+    private fun startXmlPracticum() {
+        val customContainer = CustomContainer(this)
+
+
+        val firstView = TextView(this).apply {
+            text = "UP"
+            textSize = 24f
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val secondView = TextView(this).apply {
+            text = "DOWN"
+            textSize = 24f
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+        customContainer.addView(firstView)
+        customContainer.addView(secondView)
+        setContentView(customContainer)
     }
 }

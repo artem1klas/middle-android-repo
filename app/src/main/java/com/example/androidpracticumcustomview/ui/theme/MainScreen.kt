@@ -41,14 +41,14 @@ fun MainScreen() {
                 firstChild = {
                     Text(
                         "UP",
-                        fontSize = 28.sp,
+                        fontSize = 24.sp,
                         modifier = modifier,
                     )
                 },
                 secondChild = {
                     Text(
                         text = "DOWN",
-                        fontSize = 28.sp,
+                        fontSize = 24.sp,
                         modifier = modifier,
                     )
                 }
