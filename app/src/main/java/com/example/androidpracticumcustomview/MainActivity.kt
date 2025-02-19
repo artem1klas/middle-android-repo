@@ -3,9 +3,17 @@ package com.example.androidpracticumcustomview
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import android.view.ViewGroup
 import android.widget.TextView
+import android.window.OnBackInvokedDispatcher
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.setContent
+import androidx.compose.ui.graphics.Color
 import com.example.androidpracticumcustomview.ui.theme.CustomContainer
+import com.example.androidpracticumcustomview.ui.theme.MainScreen
+import com.example.androidpracticumcustomview.ui.theme.MenuScreen
 
 /*
 Задание:
@@ -13,33 +21,65 @@ import com.example.androidpracticumcustomview.ui.theme.CustomContainer
 */
 
 class MainActivity : ComponentActivity() {
+    private var flagOfMenuScreen = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /*
-        Раскомментируйте нужный вариант
-         */
-        startXmlPracticum() // «традиционный» android (XML)
-//          setContent { // Jetpack Compose
-//             MainScreen()
+
+        fun startMenuScreen() {
+            if (!flagOfMenuScreen){
+                flagOfMenuScreen = true
+                setContent {
+                    MenuScreen(
+                        composeClick = {
+                            flagOfMenuScreen = false
+                            setContent{
+                                MainScreen()
+                            }
+                        },
+                        tradeVersClick = {
+                            flagOfMenuScreen = false
+                            startXmlPracticum()
+                        }
+                    )
+                }
+            } else {
+                finish()
+            }
+        }
+
+        val back = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                startMenuScreen()
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this, back)
+
+        startMenuScreen()
     }
 
     private fun startXmlPracticum() {
         val customContainer = CustomContainer(this)
-        setContentView(customContainer)
 
         val firstView = TextView(this).apply {
-            // TODO
-            // ...
+            text = context.getString(R.string.up)
+            textSize = 24f
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
 
         val secondView = TextView(this).apply {
-            // TODO
-            // ...
+            text = context.getString(R.string.down)
+            textSize = 24f
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
-
-        // Добавление второго элемента через некоторое время
-        Handler(Looper.getMainLooper()).postDelayed({
-            customContainer.addView(secondView)
-        }, 2000)
+        customContainer.addView(firstView)
+        customContainer.addView(secondView)
+        setContentView(customContainer)
     }
 }

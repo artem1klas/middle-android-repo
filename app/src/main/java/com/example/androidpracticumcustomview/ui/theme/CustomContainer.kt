@@ -1,9 +1,16 @@
 package com.example.androidpracticumcustomview.ui.theme
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.view.children
+import com.example.androidpracticumcustomview.R
+import com.example.androidpracticumcustomview.ui.DURATION_OF_ALPHA
+import com.example.androidpracticumcustomview.ui.DURATION_OF_MOVEMENT
+import com.example.androidpracticumcustomview.ui.MAX_CHILD
 
 /*
 Задание:
@@ -24,17 +31,65 @@ class CustomContainer @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        // TODO
-        // ...
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+
+        for(child in children){
+            measureChild(child, widthMeasureSpec, heightMeasureSpec)
+        }
+
+        setMeasuredDimension(width, height)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        // TODO
-        // ...
+        val centerHorizontal = (right - left) / 2
+        val centerVertical = (bottom - top) / 2
+
+        for (child in children) {
+            val leftEdge = centerHorizontal - (child.measuredWidth / 2)
+            val topEdge = centerVertical - (child.measuredHeight / 2)
+
+            child.layout(
+                leftEdge,
+                topEdge,
+                leftEdge + child.measuredWidth,
+                topEdge + child.measuredHeight
+            )
+
+            child.alpha = 0f
+//            child.animate().alpha(1f).setDuration(DURATION_OF_MOVEMENT)
+
+            when(children.indexOf(child)){
+                0 ->{
+                    val animatorSet = AnimatorSet()
+                    val a = ObjectAnimator.ofFloat(child, "alpha", 1f).apply {
+                        duration = DURATION_OF_ALPHA
+                    }
+                    val b = ObjectAnimator.ofFloat(child, "translationY", - (bottom.toFloat() / 2) + child.height).apply {
+                        duration = DURATION_OF_MOVEMENT
+                    }
+                    animatorSet.playTogether(a, b)
+                    animatorSet.start()
+                }
+                1 -> {
+                    val animatorSet = AnimatorSet()
+                    val a = ObjectAnimator.ofFloat(child, "alpha", 1f).apply {
+                        duration = DURATION_OF_ALPHA
+                    }
+                    val b = ObjectAnimator.ofFloat(child, "translationY",  (bottom.toFloat() / 2) - child.height).apply {
+                        duration = DURATION_OF_MOVEMENT
+                    }
+                    animatorSet.playTogether(a, b)
+                    animatorSet.start()
+                }
+            }
+        }
     }
 
     override fun addView(child: View) {
-        // TODO
-        // ...
+        if (childCount >= MAX_CHILD) {
+            throw IllegalStateException(context.getString(R.string.number_of_child_views_exceeded))
+        }
+        super.addView(child)
     }
 }
