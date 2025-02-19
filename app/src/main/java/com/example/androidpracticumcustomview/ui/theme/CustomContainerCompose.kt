@@ -63,7 +63,6 @@ fun CustomContainerCompose(
                 secondChild?.let { Box { it() } }
             }
         ) { measurables, consraints ->
-            heightOfScreen = consraints.maxHeight.toFloat() - 200
 
             val placeables = measurables.map { measurable -> measurable.measure(consraints) }
 
@@ -72,8 +71,14 @@ fun CustomContainerCompose(
                     val x = consraints.maxWidth / 2 - placeable.width / 2
                     val y = consraints.maxHeight / 2 - placeable.height / 2
                     val targetY = when (index) {
-                        0 -> -offsetVertical.value.toInt()
-                        else -> offsetVertical.value.toInt()
+                        0 -> {
+                            heightOfScreen = consraints.maxHeight.toFloat() + placeable.height * 2f
+                            -offsetVertical.value.toInt()
+                        }
+                        else -> {
+                            heightOfScreen = consraints.maxHeight.toFloat() - placeable.height * 2f
+                            offsetVertical.value.toInt()
+                        }
                     }
                     placeable.placeRelative(x = x, y = y + targetY)
                 }

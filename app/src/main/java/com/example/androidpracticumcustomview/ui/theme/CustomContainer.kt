@@ -1,11 +1,13 @@
 package com.example.androidpracticumcustomview.ui.theme
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
-import android.provider.SyncStateContract.Constants
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.children
+import com.example.androidpracticumcustomview.R
 import com.example.androidpracticumcustomview.ui.DURATION_OF_ALPHA
 import com.example.androidpracticumcustomview.ui.DURATION_OF_MOVEMENT
 import com.example.androidpracticumcustomview.ui.MAX_CHILD
@@ -55,19 +57,38 @@ class CustomContainer @JvmOverloads constructor(
             )
 
             child.alpha = 0f
-            child.animate().alpha(1f).setDuration(DURATION_OF_MOVEMENT)
+//            child.animate().alpha(1f).setDuration(DURATION_OF_MOVEMENT)
 
             when(children.indexOf(child)){
-                0 -> child.animate().y(top.toFloat()).setDuration(DURATION_OF_MOVEMENT).start()
-                1 -> child.animate().y(bottom.toFloat() - child.measuredHeight).setDuration(DURATION_OF_MOVEMENT).start()
+                0 ->{
+                    val animatorSet = AnimatorSet()
+                    val a = ObjectAnimator.ofFloat(child, "alpha", 1f).apply {
+                        duration = DURATION_OF_ALPHA
+                    }
+                    val b = ObjectAnimator.ofFloat(child, "translationY", - (bottom.toFloat() / 2) + child.height).apply {
+                        duration = DURATION_OF_MOVEMENT
+                    }
+                    animatorSet.playTogether(a, b)
+                    animatorSet.start()
+                }
+                1 -> {
+                    val animatorSet = AnimatorSet()
+                    val a = ObjectAnimator.ofFloat(child, "alpha", 1f).apply {
+                        duration = DURATION_OF_ALPHA
+                    }
+                    val b = ObjectAnimator.ofFloat(child, "translationY",  (bottom.toFloat() / 2) - child.height).apply {
+                        duration = DURATION_OF_MOVEMENT
+                    }
+                    animatorSet.playTogether(a, b)
+                    animatorSet.start()
+                }
             }
         }
-
     }
 
     override fun addView(child: View) {
         if (childCount >= MAX_CHILD) {
-            throw IllegalStateException("Превышено количество дочерних View!")
+            throw IllegalStateException(context.getString(R.string.number_of_child_views_exceeded))
         }
         super.addView(child)
     }

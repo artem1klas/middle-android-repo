@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">android practicum custom view</string>
+    <string name="up">UP</string>
+    <string name="down">DOWN</string>
+    <string name="compose">Compose</string>
+    <string name="custom_view">CustomView</string>
+    <string name="number_of_child_views_exceeded">Превышено количество дочерних View!</string>
 </resources>
